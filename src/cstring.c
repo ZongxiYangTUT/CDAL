@@ -31,22 +31,28 @@ typedef struct {
 } cstring_header;
 
 size_t cstring_len(cstring s) {
+  if (!s) return 0;
   cstring_header* hdr = GET_HEADER(s);
   return hdr->len;
 }
 
 size_t cstring_avail(cstring s) {
+  if (!s) return 0;
   cstring_header* hdr = GET_HEADER(s);
   return hdr->free;
 }
 
 cstring cstring_newlen(const void* data, size_t len) {
-  if (!data) return NULL;
-
   cstring_header* hdr = malloc(sizeof(cstring_header) + len + 1);
   if (!hdr) return NULL;
 
-  memcpy(hdr->buf, data, len);
+  if (len) {
+    if (data) {
+      memcpy(hdr->buf, data, len);
+    } else {
+      memset(hdr->buf, 0, len);
+    }
+  }
 
   hdr->len = len;
   hdr->free = 0;
@@ -54,9 +60,35 @@ cstring cstring_newlen(const void* data, size_t len) {
   return hdr->buf;
 }
 
+cstring cstring_empty(void) { return cstring_newlen("", 0); }
+
 cstring cstring_newstr(const char* s) { return cstring_newlen(s, strlen(s)); }
 
+cstring cstring_copy(const cstring s) {
+  if (!s) return NULL;
+  cstring_header* hdr = GET_HEADER(s);
+  return cstring_newlen(hdr->buf, hdr->len);
+}
+
+bool cstring_equal(const cstring s1, const cstring s2) {
+  if (!s1 && !s2) return true;
+  if (!s1 || !s2) return false;
+  cstring_header* hdr1 = GET_HEADER(s1);
+  cstring_header* hdr2 = GET_HEADER(s2);
+  if (hdr1->len != hdr2->len) return false;
+  if (hdr1->len == 0) return true;
+  return memcmp(hdr1->buf, hdr2->buf, hdr1->len) == 0;
+}
+
 void cstring_clear(cstring s) {
+  if (!s) return;
+  cstring_header* hdr = GET_HEADER(s);
+  hdr->free += hdr->len;
+  hdr->len = 0;
+  hdr->buf[0] = '\0';
+}
+
+void cstring_free(cstring s) {
   if (!s) return;
   cstring_header* hdr = GET_HEADER(s);
   hdr->free = 0;

@@ -20,6 +20,7 @@
 
 #ifndef CSTRING_H
 #define CSTRING_H
+#include <stdbool.h>
 #include <stddef.h>
 typedef char* cstring;
 
@@ -27,10 +28,27 @@ size_t cstring_len(cstring s);
 
 size_t cstring_avail(cstring s);
 
+/// @brief 创建一个以'\0'结尾的字符串，字符串中间可以存储'\0'，如
+/// cstring_newlen("hello\0world", 11); 是可以的
+/// @param data
+/// @param len
+/// @return
 cstring cstring_newlen(const void* data, size_t len);
+
+cstring cstring_empty(void);
 
 cstring cstring_newstr(const char* s);
 
+cstring cstring_copy(const cstring s);
+
+bool cstring_equal(const cstring s1, const cstring s2);
+
+/// @brief 将字符串的长度置为0
+/// @param s
 void cstring_clear(cstring s);
 
-#endif
+/// @brief 释放字符串申请的空间
+/// @param s
+void cstring_free(cstring s);
+
+#endif  // CSTRING_H
