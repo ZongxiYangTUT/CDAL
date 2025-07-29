@@ -45,7 +45,18 @@ bool cstring_equal(const cstring s1, const cstring s2);
 
 char cstring_front(const cstring s);
 
+/// @brief
+/// @param s
+/// @return 字符串为空时返回'\0'
 char cstring_back(const cstring s);
+
+cstring cstring_push_back(cstring s, char ch);
+
+cstring cstring_catlen(cstring s, const void* data, size_t len);
+
+cstring cstring_cat(cstring s, const char* str);
+
+cstring cstring_catcstring(cstring s, const cstring t);
 
 void cstring_pop_back(cstring s);
 

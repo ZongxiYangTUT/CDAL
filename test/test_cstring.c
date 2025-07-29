@@ -8,11 +8,11 @@ int main(int argc, char* argv[]) {
   CTEST_BEGIN();
 
   cstring s = cstring_newlen("abc", 3);
-  CTEST_COND("cstring_newlen", !memcmp(s, "abc", 4));
+  CTEST_COND("cstring_newlen", memcmp(s, "abc", 4) == 0);
   cstring_free(s);
 
   s = cstring_newstr("hello");
-  CTEST_COND("cstring_newstr", !memcmp(s, "hello", 6));
+  CTEST_COND("cstring_newstr", memcmp(s, "hello", 6) == 0);
   cstring_free(s);
 
   s = cstring_newstr("world");
@@ -32,6 +32,22 @@ int main(int argc, char* argv[]) {
   CTEST_COND("cstring_front", cstring_front(s) == 't');
   cstring_pop_back(s);
   CTEST_COND("cstring_back", cstring_back(s) == 'o');
+  cstring_free(s);
+
+  s = cstring_newstr("hello");
+  s = cstring_cat(s, "world");
+  CTEST_COND("cstring_cat", strcmp(s, "helloworld") == 0);
+
+  s = cstring_catlen(s, "1234\0ab", 7);
+  CTEST_COND("cstring_catlen", strcmp(s, "helloworld1234\0ab") == 0);
+
+  cstring_clear(s);
+  s = cstring_catcstring(s, s);
+  CTEST_COND("cstring_catcstring", strcmp(s, "") == 0);
+
+  s = cstring_push_back(s, 'a');
+  CTEST_COND("cstring_push_back", strcmp(s, "a") == 0);
+
   cstring_free(s);
 
   CTEST_END();
