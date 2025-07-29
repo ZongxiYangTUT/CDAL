@@ -28,7 +28,12 @@ int main(int argc, char* argv[]) {
   cstring_free(s1);
   cstring_free(s2);
 
-  CTEST_END();
+  s = cstring_newstr("test pop");
+  CTEST_COND("cstring_front", cstring_front(s) == 't');
+  cstring_pop_back(s);
+  CTEST_COND("cstring_back", cstring_back(s) == 'o');
+  cstring_free(s);
 
+  CTEST_END();
   exit(EXIT_SUCCESS);
 }

@@ -30,14 +30,16 @@ typedef struct {
   char buf[];
 } cstring_header;
 
+static bool is_valid(const cstring s) { return s != NULL; }
+
 size_t cstring_len(cstring s) {
-  if (!s) return 0;
+  if (!is_valid(s)) return 0;
   cstring_header* hdr = GET_HEADER(s);
   return hdr->len;
 }
 
 size_t cstring_avail(cstring s) {
-  if (!s) return 0;
+  if (!is_valid(s)) return 0;
   cstring_header* hdr = GET_HEADER(s);
   return hdr->free;
 }
@@ -65,7 +67,7 @@ cstring cstring_empty(void) { return cstring_newlen("", 0); }
 cstring cstring_newstr(const char* s) { return cstring_newlen(s, strlen(s)); }
 
 cstring cstring_copy(const cstring s) {
-  if (!s) return NULL;
+  if (!is_valid(s)) return NULL;
   cstring_header* hdr = GET_HEADER(s);
   return cstring_newlen(hdr->buf, hdr->len);
 }
@@ -78,6 +80,29 @@ bool cstring_equal(const cstring s1, const cstring s2) {
   if (hdr1->len != hdr2->len) return false;
   if (hdr1->len == 0) return true;
   return memcmp(hdr1->buf, hdr2->buf, hdr1->len) == 0;
+}
+
+char cstring_front(const cstring s) {
+  if (!is_valid(s)) return '\0';
+  cstring_header* hdr = GET_HEADER(s);
+  return hdr->buf[0];
+}
+
+char cstring_back(const cstring s) {
+  if (!is_valid(s)) return '\0';
+  cstring_header* hdr = GET_HEADER(s);
+  if (hdr->len == 0) return '\0';
+  return hdr->buf[hdr->len - 1];
+}
+
+void cstring_pop_back(cstring s) {
+  if (!is_valid(s)) return;
+  cstring_header* hdr = GET_HEADER(s);
+  if (hdr->len) {
+    hdr->len--;
+    hdr->free++;
+    hdr->buf[hdr->len] = '\0';
+  }
 }
 
 void cstring_clear(cstring s) {

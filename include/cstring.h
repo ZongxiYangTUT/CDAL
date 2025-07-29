@@ -43,6 +43,12 @@ cstring cstring_copy(const cstring s);
 
 bool cstring_equal(const cstring s1, const cstring s2);
 
+char cstring_front(const cstring s);
+
+char cstring_back(const cstring s);
+
+void cstring_pop_back(cstring s);
+
 /// @brief 将字符串的长度置为0
 /// @param s
 void cstring_clear(cstring s);
