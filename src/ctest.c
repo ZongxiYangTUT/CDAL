@@ -1,4 +1,4 @@
-#include "CTest.h"
+#include "ctest.h"
 
 #include <stdio.h>
 static int total, passed;
