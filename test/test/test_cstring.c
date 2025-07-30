@@ -4,7 +4,8 @@
 
 #include "cstring.h"
 #include "ctest.h"
-int main(int argc, char* argv[]) {
+
+void test_cstring() {
   CTEST_BEGIN();
 
   cstring s = cstring_newlen("abc", 3);
@@ -74,7 +75,26 @@ int main(int argc, char* argv[]) {
   s = cstring_newstr("  \n \r \t \v \f abcd: ~-+ \r");
   s = cstring_trim(s, " \r\n\t\v\f");
   CTEST_COND("cstring_trim", strcmp(s, "abcd: ~-+") == 0);
+  cstring_clear(s);
+
+  cstring_cat(s, " \n");
+  s = cstring_trim(s, " \n");
+  CTEST_COND("cstring_trim", strcmp(s, "") == 0);
+
+  cstring_free(s);
+
+  s = cstring_newstr("hello world");
+  CTEST_COND("cstring_find", cstring_find(s, NULL) == false);
+  CTEST_COND("cstring_start_with",
+             cstring_start_with(s, "hedasdddddddddsadas") == false);
+  CTEST_COND("cstring_end_with",
+             cstring_end_with(s, "ldsssssssssssssd") == false);
+
   cstring_free(s);
   CTEST_END();
+}
+
+int main(int argc, char* argv[]) {
+  test_cstring();
   exit(EXIT_SUCCESS);
 }

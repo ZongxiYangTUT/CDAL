@@ -233,6 +233,23 @@ cstring cstring_trim(cstring s, const char* pattern) {
   return s;
 }
 
+bool cstring_find(cstring s, const char* str) {
+  if (is_invalid(s) || str == NULL) return false;
+  return strstr(s, str) != NULL;
+}
+
+bool cstring_start_with(cstring s, const char* str) {
+  if (is_invalid(s) || str == NULL) return false;
+  return strstr(s, str) == s;
+}
+
+bool cstring_end_with(cstring s, const char* str) {
+  if (is_invalid(s) || str == NULL) return false;
+  cstring_header* hdr = GET_HEADER(s);
+  size_t len = strlen(str);
+  return strstr(s, str) == s + hdr->size - len;
+}
+
 void cstring_clear(cstring s) {
   if (is_invalid(s)) return;
   cstring_header* hdr = GET_HEADER(s);

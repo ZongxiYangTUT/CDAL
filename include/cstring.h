@@ -22,7 +22,12 @@
 #define CSTRING_H
 #include <stdbool.h>
 #include <stddef.h>
+
 typedef char* cstring;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 size_t cstring_size(const cstring s);
 
@@ -80,6 +85,12 @@ void cstring_tolower(cstring s);
 /// @return
 cstring cstring_trim(cstring s, const char* pattern);
 
+bool cstring_find(cstring s, const char* str);
+
+bool cstring_start_with(cstring s, const char* str);
+
+bool cstring_end_with(cstring s, const char* str);
+
 /// @brief 将字符串的长度置为0
 /// @param s
 void cstring_clear(cstring s);
@@ -87,5 +98,9 @@ void cstring_clear(cstring s);
 /// @brief 释放字符串申请的空间
 /// @param s
 void cstring_free(cstring s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // CSTRING_H
