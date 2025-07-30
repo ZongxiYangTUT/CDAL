@@ -70,6 +70,16 @@ cstring cstring_resize(cstring s, size_t len);
 
 cstring cstring_reserve(cstring s, size_t len);
 
+void cstring_toupper(cstring s);
+
+void cstring_tolower(cstring s);
+
+/// @brief 去除两端所有包含在pattern中的字符
+/// @param s
+/// @param pattern 匹配字符串
+/// @return
+cstring cstring_trim(cstring s, const char* pattern);
+
 /// @brief 将字符串的长度置为0
 /// @param s
 void cstring_clear(cstring s);

@@ -20,6 +20,7 @@
 
 #include "cstring.h"
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #define GET_HEADER(s) ((cstring_header*)((s) - sizeof(cstring_header)))
@@ -194,6 +195,42 @@ cstring cstring_reserve(cstring s, size_t len) {
     hdr = GET_HEADER(s);
   }
   return hdr->buf;
+}
+
+void cstring_toupper(cstring s) {
+  if (is_invalid(s)) return;
+  cstring_header* hdr = GET_HEADER(s);
+  size_t len = hdr->size;
+  for (char* p = s; p < s + len; p++) {
+    *p = toupper(*p);
+  }
+}
+
+void cstring_tolower(cstring s) {
+  if (is_invalid(s)) return;
+  cstring_header* hdr = GET_HEADER(s);
+  size_t len = hdr->size;
+  for (char* p = s; p < s + len; p++) {
+    *p = tolower(*p);
+  }
+}
+
+cstring cstring_trim(cstring s, const char* pattern) {
+  if (is_invalid(s)) return NULL;
+  if (pattern == NULL) return s;
+  if (cstring_size(s) == 0) return s;
+
+  cstring_header* hdr = GET_HEADER(s);
+  size_t curr_size = hdr->size;
+  char* sp = s;
+  char* ep = s + curr_size - 1;
+  while (sp <= ep && strchr(pattern, *sp) != NULL) sp++;
+  while (sp <= ep && strchr(pattern, *ep) != NULL) ep--;
+  size_t new_size = ep - sp + 1;
+  memcpy(hdr->buf, sp, new_size);
+  hdr->size = new_size;
+  hdr->buf[new_size] = '\0';
+  return s;
 }
 
 void cstring_clear(cstring s) {

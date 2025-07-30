@@ -63,6 +63,18 @@ int main(int argc, char* argv[]) {
   CTEST_COND("cstring_capacity", cstring_capacity(s) >= 10);
   cstring_free(s);
 
+  s = cstring_newstr("abCD");
+  cstring_toupper(s);
+  CTEST_COND("cstring_toupper", strcmp(s, "ABCD") == 0);
+
+  cstring_tolower(s);
+  CTEST_COND("cstring_tolower", strcmp(s, "abcd") == 0);
+  cstring_free(s);
+
+  s = cstring_newstr("  \n \r \t \v \f abcd: ~-+ \r");
+  s = cstring_trim(s, " \r\n\t\v\f");
+  CTEST_COND("cstring_trim", strcmp(s, "abcd: ~-+") == 0);
+  cstring_free(s);
   CTEST_END();
   exit(EXIT_SUCCESS);
 }
