@@ -16,11 +16,11 @@ int main(int argc, char* argv[]) {
   cstring_free(s);
 
   s = cstring_newstr("world");
-  CTEST_COND("cstring_len", cstring_len(s) == 5);
+  CTEST_COND("cstring_size", cstring_size(s) == 5);
   cstring_free(s);
 
   s = cstring_empty();
-  CTEST_COND("cstring_empty", cstring_len(s) == 0);
+  CTEST_COND("cstring_empty", cstring_size(s) == 0);
 
   cstring s1 = cstring_newstr("test cstring");
   cstring s2 = cstring_copy(s1);
@@ -47,7 +47,20 @@ int main(int argc, char* argv[]) {
 
   s = cstring_push_back(s, 'a');
   CTEST_COND("cstring_push_back", strcmp(s, "a") == 0);
+  cstring_free(s);
 
+  s = cstring_empty();
+  cstring_cpy(s, "test cpy");
+  CTEST_COND("cstring_cpy", strcmp(s, "test cpy") == 0);
+
+  cstring_cpylen(s, "\0\0\n", 3);
+  CTEST_COND("cstring_cpylen", memcmp(s, "\0\0\n", 3) == 0);
+
+  s = cstring_resize(s, 2);
+  CTEST_COND("cstring_resize", memcmp(s, "\0\0", 2) == 0);
+
+  s = cstring_reserve(s, 10);
+  CTEST_COND("cstring_capacity", cstring_capacity(s) >= 10);
   cstring_free(s);
 
   CTEST_END();

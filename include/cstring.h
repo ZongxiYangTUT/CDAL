@@ -24,9 +24,11 @@
 #include <stddef.h>
 typedef char* cstring;
 
-size_t cstring_len(cstring s);
+size_t cstring_size(const cstring s);
 
-size_t cstring_avail(cstring s);
+size_t cstring_capacity(const cstring s);
+
+size_t cstring_avail(const cstring s);
 
 /// @brief 创建一个以'\0'结尾的字符串，字符串中间可以存储'\0'，如
 /// cstring_newlen("hello\0world", 11); 是可以的
@@ -59,6 +61,14 @@ cstring cstring_cat(cstring s, const char* str);
 cstring cstring_catcstring(cstring s, const cstring t);
 
 void cstring_pop_back(cstring s);
+
+cstring cstring_cpylen(cstring s, const void* data, size_t len);
+
+cstring cstring_cpy(cstring s, const char* str);
+
+cstring cstring_resize(cstring s, size_t len);
+
+cstring cstring_reserve(cstring s, size_t len);
 
 /// @brief 将字符串的长度置为0
 /// @param s
