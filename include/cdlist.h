@@ -19,6 +19,7 @@
 // SOFTWARE.
 #ifndef CDOUBLELIST_H
 #define CDOUBLELIST_H
+#include <stdbool.h>
 #include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +36,8 @@ typedef struct {
   cdlist_node* tail;
   size_t size;
   void (*free)(void* val);
+  void* (*copy)(void* val);
+  bool (*equal)(void* v1, void* v2);
 } cdlist;
 
 cdlist* cdlist_create(void);

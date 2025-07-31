@@ -20,7 +20,6 @@
 
 #include "cdlist.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
 
 static bool is_invalid(cdlist* l) { return l == NULL; }
@@ -32,6 +31,9 @@ cdlist* cdlist_create(void) {
   l->tail = NULL;
   l->size = 0;
   l->free = NULL;
+  l->copy = NULL;
+  l->equal = NULL;
+  return l;
 }
 
 void cdlist_free(cdlist* l) {
@@ -51,15 +53,14 @@ cdlist* cdlist_push_back(cdlist* l, void* val) {
   cdlist_node* new_node = malloc(sizeof(cdlist_node));
   if (new_node == NULL) return NULL;
   new_node->value = val;
+  new_node->next = NULL;
   if (l->tail == NULL) {
     new_node->prev = NULL;
-    new_node->next = NULL;
     l->tail = new_node;
     l->head = new_node;
   } else {
     new_node->prev = l->tail;
     l->tail->next = new_node;
-    new_node->next = NULL;
     l->tail = new_node;
   }
   l->size++;
@@ -68,6 +69,21 @@ cdlist* cdlist_push_back(cdlist* l, void* val) {
 
 cdlist* cdlist_push_front(cdlist* l, void* val) {
   if (is_invalid(l)) return NULL;
+  cdlist_node* new_node = malloc(sizeof(cdlist_node));
+  if (new_node == NULL) return NULL;
+  new_node->value = val;
+  new_node->prev = NULL;
+  if (l->head == NULL) {
+    new_node->next = NULL;
+    l->head = new_node;
+    l->tail = new_node;
+  } else {
+    new_node->next = l->head;
+    l->head->prev = new_node;
+    l->head = new_node;
+  }
+  l->size++;
+  return l;
 }
 
 void* cdlist_back(cdlist* l) {
@@ -85,9 +101,34 @@ void* cdlist_front(cdlist* l) {
 void cdlist_pop_back(cdlist* l) {
   if (is_invalid(l)) return;
   if (l->size == 0) return;
+  cdlist_node* tmp = l->tail;
+  if (l->size == 1) {
+    l->head = l->tail = NULL;
+  } else {
+    l->tail = tmp->prev;
+    l->tail->next = NULL;
+  }
+  if (l->free) {
+    l->free(tmp->value);
+  }
+  free(tmp);
+  l->size--;
 }
 
 void cdlist_pop_front(cdlist* l) {
   if (is_invalid(l)) return;
   if (l->size == 0) return;
+  cdlist_node* tmp = l->head;
+
+  if (l->size == 1) {
+    l->head = l->tail = NULL;
+  } else {
+    l->head = tmp->next;
+    l->head->prev = NULL;
+  }
+  if (l->free) {
+    l->free(tmp->value);
+  }
+  free(tmp);
+  l->size--;
 }
