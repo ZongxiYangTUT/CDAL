@@ -32,6 +32,10 @@ void test_cdlist() {
 
   CTEST_COND("cdlist_insert", *(int*)node->value == 1);
 
+  node = cdlist_get(l, -1);
+
+  CTEST_COND("cdlist_get", *(int*)node->value == 2);
+
   cdlist_iterator iter = cdlist_begin(l);
 
   while ((node = cdlist_next(&iter)) != NULL) {

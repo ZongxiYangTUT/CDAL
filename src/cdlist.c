@@ -184,25 +184,21 @@ void cdlist_remove(cdlist* l, cdlist_node* node) {
   if (node == NULL) return;
   if (l->size == 0) return;
 
-  if (node == l->head) {
-    cdlist_pop_front(l);
-    return;
-  }
+  if (node == l->head)
+    l->head = node->next;
+  else
+    node->prev->next = node->next;
 
-  if (node == l->tail) {
-    cdlist_pop_back(l);
-    return;
-  }
+  if (node == l->tail)
+    l->tail = node->prev;
+  else
+    node->next->prev = node->prev;
 
-  cdlist_node* prev = node->prev;
-  cdlist_node* next = node->next;
+  node->next->prev = node->prev;
   if (l->free) {
     l->free(node->value);
   }
   free(node);
-  prev->next = next;
-  next->prev = prev;
-
   l->size--;
 }
 
@@ -220,14 +216,20 @@ cdlist_node* cdlist_find(cdlist* l, void* val) {
   return NULL;
 }
 
-cdlist_node* cdlist_get(cdlist* l, size_t index) {
+cdlist_node* cdlist_get(cdlist* l, long index) {
   if (is_invalid(l)) return NULL;
-  if (index >= l->size) return NULL;
-  cdlist_node* curr = l->head;
-  while (index--) {
-    curr = curr->next;
+  cdlist_node* node;
+  if (index < 0) {
+    index = -index - 1;
+    if (index >= l->size) return NULL;
+    node = l->tail;
+    while (index--) node = node->prev;
+  } else {
+    if (index >= l->size) return NULL;
+    node = l->head;
+    while (index--) node = node->next;
   }
-  return curr;
+  return node;
 }
 
 cdlist_iterator cdlist_begin(cdlist* l) {

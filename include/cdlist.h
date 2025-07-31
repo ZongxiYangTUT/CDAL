@@ -71,13 +71,22 @@ void cdlist_pop_back(cdlist* l);
 
 void cdlist_pop_front(cdlist* l);
 
+/// @brief insert before insert_pose
+/// @param l
+/// @param insert_pos
+/// @param val
+/// @return
 cdlist* cdlist_insert(cdlist* l, cdlist_node* insert_pos, void* val);
 
 void cdlist_remove(cdlist* l, cdlist_node* node);
 
 cdlist_node* cdlist_find(cdlist* l, void* val);
 
-cdlist_node* cdlist_get(cdlist* l, size_t index);
+/// @brief
+/// @param l
+/// @param index >0, head->tail; <0 tail->head
+/// @return
+cdlist_node* cdlist_get(cdlist* l, long index);
 
 cdlist_iterator cdlist_begin(cdlist* l);
 
