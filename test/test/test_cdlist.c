@@ -23,6 +23,21 @@ void test_cdlist() {
   cdlist_pop_front(l);
   CTEST_COND("cdlist_pop_front", *(int*)cdlist_front(l) == 1);
 
+  cdlist_node* node = cdlist_find(l, &arr[1]);
+  CTEST_COND("cdlist_find", *(int*)node->value == 2);
+  cdlist_insert(l, node, &arr[0]);
+
+  CTEST_COND("cdlist_size", cdlist_size(l) == 3);
+  node = cdlist_get(l, 0);
+
+  CTEST_COND("cdlist_insert", *(int*)node->value == 1);
+
+  cdlist_iterator iter = cdlist_begin(l);
+
+  while ((node = cdlist_next(&iter)) != NULL) {
+    printf("%d\n", *(int*)cdlist_value(node));
+  }
+
   cdlist_free(l);
   CTEST_END();
 }

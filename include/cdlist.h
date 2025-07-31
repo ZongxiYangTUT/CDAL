@@ -32,6 +32,11 @@ typedef struct cdlist_node {
 } cdlist_node;
 
 typedef struct {
+  cdlist_node* node;
+  int dir;  ///< 0: forward 1: reverse
+} cdlist_iterator;
+
+typedef struct {
   cdlist_node* head;
   cdlist_node* tail;
   size_t size;
@@ -44,6 +49,16 @@ cdlist* cdlist_create(void);
 
 void cdlist_free(cdlist* l);
 
+size_t cdlist_size(cdlist* l);
+
+void* cdlist_value(cdlist_node* node);
+
+void cdlist_set_free(cdlist* l, void (*free)(void* val));
+
+void cdlist_set_copy(cdlist* l, void* (*copy)(void* val));
+
+void cdlist_set_equal(cdlist* l, bool (*equal)(void* v1, void* v2));
+
 cdlist* cdlist_push_back(cdlist* l, void* val);
 
 cdlist* cdlist_push_front(cdlist* l, void* val);
@@ -55,6 +70,20 @@ void* cdlist_front(cdlist* l);
 void cdlist_pop_back(cdlist* l);
 
 void cdlist_pop_front(cdlist* l);
+
+cdlist* cdlist_insert(cdlist* l, cdlist_node* insert_pos, void* val);
+
+void cdlist_remove(cdlist* l, cdlist_node* node);
+
+cdlist_node* cdlist_find(cdlist* l, void* val);
+
+cdlist_node* cdlist_get(cdlist* l, size_t index);
+
+cdlist_iterator cdlist_begin(cdlist* l);
+
+cdlist_iterator cdlist_rbegin(cdlist* l);
+
+cdlist_node* cdlist_next(cdlist_iterator* iter);
 
 #ifdef __cplusplus
 }
